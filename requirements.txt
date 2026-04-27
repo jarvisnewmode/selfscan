@@ -1,0 +1,6 @@
+flask
+requests
+flask-limiter
+gunicorn
+dnspython
+beautifulsoup4

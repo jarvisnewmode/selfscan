@@ -1,93 +1,147 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>SelfScan - Digital Risk Scanner</title>
+    <title>SelfScan - Digital Identity Scanner</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
-<header>
-    <h2>🔐 SelfScan</h2>
-</header>
+<div class="overlay"></div>
 
-<div class="container">
-    <h1>Digital Risk Scanner</h1>
-    <p>Username yoki Email kiriting. Ikkalasi ham shart emas.</p>
+<div class="main-container">
 
+    <h1>🔍 SelfScan</h1>
+    <p>Digital Identity & Exposure Scanner</p>
+
+    <!-- SCAN FORM -->
     <form method="POST" id="scanForm">
-        <input type="text" name="username" placeholder="Username (ixtiyoriy)">
-        <input type="email" name="email" placeholder="Email (ixtiyoriy)">
+
+        <input type="text" name="username" placeholder="Enter username">
+        <input type="text" name="phone" placeholder="+998901234567">
+        <input type="text" name="email" placeholder="example@gmail.com">
 
         <button type="submit" id="scanButton">Scan</button>
 
-        <div class="loading" id="loadingBox">
-            <div class="spinner"></div>
-            <p>Scanning...</p>
-        </div>
     </form>
 
-    <div class="stats">
-        <p>🔎 Jami Scanlar: <strong>{{ scan_counter }}</strong></p>
+    <!-- RISK METER -->
+    {% if risk_data %}
+    <div class="risk-meter">
+        <h2>📊 Risk Level: {{ risk_data.level }}</h2>
+
+        <div class="progress-container">
+            <div class="progress-bar 
+                {% if risk_data.level == 'Low' %}low-bar
+                {% elif risk_data.level == 'Medium' %}medium-bar
+                {% else %}high-bar
+                {% endif %}"
+                style="width: {{ risk_data.percentage }}%;">
+            </div>
+        </div>
+
+        <p>{{ risk_data.percentage }}% Exposure</p>
     </div>
+    {% endif %}
 
-    {% if results %}
-        <div class="results-box">
-            <h2>Username Natijalari:</h2>
+    <!-- USERNAME RESULTS -->
+    {% if username_data %}
 
-            {% for platform, data in results.items() %}
-                <p>
-                    {{ platform }}:
+        <div class="summary-card">
+            <h2>📊 Exposure Summary</h2>
+
+            {% set verified_count = username_data.verified.values() | selectattr("found") | list | length %}
+            {% set manual_count = username_data.manual | length %}
+
+            <p>✅ Verified Accounts Found: <strong>{{ verified_count }}</strong></p>
+            <p>🔗 Manual Platforms: <strong>{{ manual_count }}</strong></p>
+        </div>
+
+        <div class="result-card">
+            <h2>✅ Verified Platforms</h2>
+
+            {% for platform, data in username_data.verified.items() %}
+                <div class="platform-row">
+                    <span>{{ platform }}</span>
                     {% if data.found %}
-                        ✅ 
-                        <a href="{{ data.url }}" target="_blank">Profilni ochish</a>
+                        ✅ <a href="{{ data.url }}" target="_blank">Open</a>
                     {% else %}
-                        ❌ Topilmadi
+                        ❌ Not Found
                     {% endif %}
-                </p>
+                </div>
             {% endfor %}
         </div>
+
+        <div class="result-card">
+            <h2>🔗 Manual Check Required</h2>
+
+            {% for platform, data in username_data.manual.items() %}
+                <div class="platform-row">
+                    <span>{{ platform }}</span>
+                    <a href="{{ data.url }}" target="_blank" class="manual-link">
+                        🔍 Check
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+
     {% endif %}
 
+    <!-- PHONE RESULTS -->
+    {% if phone_result %}
+        <div class="result-card">
+            <h2>📱 Phone Analysis</h2>
+            <p>Valid: {{ phone_result.valid }}</p>
+            <p>Country: {{ phone_result.country }}</p>
+            <p>Carrier: {{ phone_result.carrier }}</p>
+            <p>Line Type: {{ phone_result.line_type }}</p>
+        </div>
+    {% endif %}
+
+    <!-- EMAIL RESULTS -->
     {% if email_result %}
-        <div class="results-box">
-            <h2>Email Natijasi:</h2>
-
-            {% if email_result.breached %}
-                <p style="color:red;">⚠ Email breachlarda topildi!</p>
-                <ul>
-                    {% for breach in email_result.breaches %}
-                        <li>{{ breach }}</li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p style="color:lightgreen;">✅ Email breachlarda topilmadi</p>
-            {% endif %}
+        <div class="result-card">
+            <h2>📧 Email Analysis</h2>
+            <p>Valid Format: {{ email_result.valid_format }}</p>
+            <p>Domain: {{ email_result.domain }}</p>
+            <p>MX Record Exists: {{ email_result.mx_record }}</p>
+            <p>Disposable: {{ email_result.disposable }}</p>
         </div>
     {% endif %}
 
-    {% if risk_level %}
-        <div class="risk-box 
-            {% if 'Low' in risk_level %}low
-            {% elif 'Medium' in risk_level %}medium
-            {% else %}high
-            {% endif %}">
-            <h2>Umumiy Risk:</h2>
-            <h3>{{ risk_level }}</h3>
-        </div>
+    <!-- FEEDBACK SECTION -->
+    <div class="feedback-card">
+        <h2>⭐ Rate SelfScan</h2>
+
+        {% if average_rating %}
+            <p>Average Rating: <strong>{{ average_rating }}/5</strong></p>
+        {% endif %}
+
+        <form method="POST" action="/feedback">
+            <select name="rating" required>
+                <option value="">Select rating</option>
+                <option value="5">⭐⭐⭐⭐⭐ (5)</option>
+                <option value="4">⭐⭐⭐⭐ (4)</option>
+                <option value="3">⭐⭐⭐ (3)</option>
+                <option value="2">⭐⭐ (2)</option>
+                <option value="1">⭐ (1)</option>
+            </select>
+
+            <input type="text" name="comment" placeholder="Optional comment">
+
+            <button type="submit">Submit Rating</button>
+        </form>
+    </div>
+
+    {% if feedback_list %}
+    <div class="feedback-card">
+        <h3>User Feedback</h3>
+        {% for item in feedback_list %}
+            <p>⭐ {{ item.rating }} - {{ item.comment }}</p>
+        {% endfor %}
+    </div>
     {% endif %}
 
 </div>
-
-<footer>
-    <p>© 2026 SelfScan | Privacy First Platform</p>
-</footer>
-
-<script>
-document.getElementById("scanForm").addEventListener("submit", function() {
-    document.getElementById("scanButton").style.display = "none";
-    document.getElementById("loadingBox").style.display = "block";
-});
-</script>
 
 </body>
 </html>
