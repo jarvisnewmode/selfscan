@@ -12,12 +12,6 @@ feedback_list = []
 monitoring_enabled = False
 
 
-# ✅ ROBOTS.TXT (Google indeks qila olishi uchun)
-@app.route("/robots.txt")
-def robots():
-    return "User-agent: *\nAllow: /", 200, {'Content-Type': 'text/plain'}
-
-
 @app.errorhandler(500)
 def internal_error(error):
     return render_template("error.html"), 500
