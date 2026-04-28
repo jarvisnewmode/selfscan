@@ -1,39 +1,47 @@
+/* GLOBAL */
+
 body {
     margin: 0;
     font-family: 'Segoe UI', sans-serif;
-    background: url('https://images.unsplash.com/photo-1518770660439-4636190af475') no-repeat center center fixed;
-    background-size: cover;
+    background: #0f172a;
     color: white;
 }
 
-.overlay {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    background: rgba(10, 20, 40, 0.85);
-    top: 0;
-    left: 0;
-}
-
 .main-container {
-    position: relative;
-    max-width: 650px;
-    margin: 80px auto;
+    max-width: 750px;
+    margin: 60px auto;
     padding: 30px;
-    background: rgba(255,255,255,0.05);
-    backdrop-filter: blur(12px);
-    border-radius: 15px;
-    z-index: 2;
 }
 
-h1 {
-    text-align: center;
+/* HEADER */
+
+header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
+
+.badge {
+    background: #2563eb;
+    padding: 4px 8px;
+    margin-left: 10px;
+    border-radius: 5px;
+    font-size: 12px;
+}
+
+.subtitle {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* FORM */
 
 input {
     width: 100%;
     padding: 10px;
     margin-bottom: 10px;
+    border: none;
+    border-radius: 6px;
 }
 
 button {
@@ -42,13 +50,75 @@ button {
     background: #2563eb;
     color: white;
     border: none;
+    border-radius: 6px;
     cursor: pointer;
 }
+
+/* MONITORING */
+
+.monitoring-card {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #1e293b;
+    border-radius: 10px;
+}
+
+.monitoring-active {
+    color: #22c55e;
+    font-weight: bold;
+}
+
+/* META INFO */
+
+.meta-card {
+    margin-top: 20px;
+    padding: 15px;
+    background: #1e293b;
+    border-radius: 10px;
+}
+
+/* RISK DASHBOARD */
+
+.risk-dashboard {
+    margin-top: 20px;
+    padding: 15px;
+    background: #1e293b;
+    border-radius: 10px;
+}
+
+.progress-container {
+    width: 100%;
+    background: #334155;
+    border-radius: 10px;
+    height: 20px;
+    margin: 10px 0;
+}
+
+.progress-bar {
+    height: 100%;
+    border-radius: 10px;
+}
+
+/* RISK COLORS */
+
+.low-bar {
+    background: #22c55e;
+}
+
+.medium-bar {
+    background: #f59e0b;
+}
+
+.high-bar {
+    background: #ef4444;
+}
+
+/* RESULT CARDS */
 
 .result-card {
     margin-top: 20px;
     padding: 15px;
-    background: rgba(255,255,255,0.1);
+    background: #1e293b;
     border-radius: 10px;
 }
 
@@ -62,49 +132,57 @@ button {
 .platform-row {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 5px;
+    margin-bottom: 6px;
 }
 
-.manual-link {
-    color: #60a5fa;
-}
+/* FEEDBACK */
 
-.risk-meter {
+.feedback-card {
     margin-top: 20px;
     padding: 15px;
-    background: rgba(255,255,255,0.1);
+    background: #1e293b;
     border-radius: 10px;
+}
+
+select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+}
+
+/* BETA MODAL */
+
+.beta-modal {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.beta-content {
+    background: #1e293b;
+    padding: 30px;
+    border-radius: 10px;
+    max-width: 500px;
     text-align: center;
 }
 
-.progress-container {
-    width: 100%;
-    background: rgba(255,255,255,0.2);
-    border-radius: 10px;
-    height: 20px;
-    margin: 10px 0;
-}
-
-.progress-bar {
-    height: 100%;
-    border-radius: 10px;
-}
-
-.low-bar { background: #22c55e; }
-.medium-bar { background: #f59e0b; }
-.high-bar { background: #ef4444; }
-
-/* FULL SCREEN OVERLAY */
+/* SCAN OVERLAY */
 
 .scan-overlay {
     position: fixed;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.9);
+    background: rgba(0,0,0,0.95);
     display: none;
     justify-content: center;
     align-items: center;
-    z-index: 999;
+    z-index: 1000;
     flex-direction: column;
 }
 
@@ -139,15 +217,13 @@ button {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(-360deg); }
 }
-.feedback-card {
+.advice-card {
     margin-top: 20px;
     padding: 15px;
-    background: rgba(255,255,255,0.1);
+    background: #1e293b;
     border-radius: 10px;
 }
 
-select {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
+.advice-card ul {
+    padding-left: 20px;
 }

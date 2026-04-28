@@ -1,32 +1,73 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>SelfScan - Digital Identity Scanner</title>
+    <title>SelfScan – Username & Email Exposure Scanner</title>
+
+    <meta charset="UTF-8">
+    <meta name="description" content="Check where your username, email or phone appears online. Digital identity exposure audit tool. Privacy-first and public data only.">
+    <meta name="keywords" content="username checker, email exposure, digital footprint scanner, online identity scan, public data audit">
+    <meta name="author" content="SelfScan">
+
+    <meta property="og:title" content="SelfScan – Digital Identity Exposure Tool">
+    <meta property="og:description" content="Scan your public digital presence across multiple platforms.">
+    <meta property="og:type" content="website">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
-<div class="overlay"></div>
-
 <div class="main-container">
 
-    <h1>🔍 SelfScan</h1>
-    <p>Digital Identity & Exposure Scanner</p>
+    <header>
+        <h1>🔍 SelfScan</h1>
+        <span class="badge">BETA</span>
+    </header>
+
+    <p class="subtitle">Digital Identity & Exposure Audit Tool</p>
+
+    <!-- MONITORING SECTION -->
+    <div class="monitoring-card">
+        <h2>🛡 Monitoring (Beta)</h2>
+
+        {% if monitoring_enabled %}
+            <p class="monitoring-active">✅ Monitoring Enabled (Free Beta)</p>
+            <p>
+                Monitoring is currently free during beta testing.
+                After official launch, subscription pricing may apply.
+            </p>
+        {% else %}
+            <form method="POST">
+                <button type="submit" name="enable_monitoring" value="1">
+                    Enable Monitoring (Free Beta)
+                </button>
+            </form>
+        {% endif %}
+    </div>
 
     <!-- SCAN FORM -->
-    <form method="POST" id="scanForm">
-
+    <form method="POST">
         <input type="text" name="username" placeholder="Enter username">
         <input type="text" name="phone" placeholder="+998901234567">
         <input type="text" name="email" placeholder="example@gmail.com">
-
-        <button type="submit" id="scanButton">Scan</button>
-
+        <button type="submit">Scan</button>
     </form>
 
-    <!-- RISK METER -->
+    <!-- SCAN META INFO -->
+    {% if scan_time %}
+    <div class="meta-card">
+        <p>🕒 Scan Completed: {{ scan_time }}</p>
+        <p>⏱ Duration: {{ scan_duration }} seconds</p>
+        <p>🔎 Platforms Checked: {{ verified_count + manual_count }}</p>
+        <p>✅ Verified Found: {{ verified_count }}</p>
+        <p>🔗 Manual Platforms: {{ manual_count }}</p>
+    </div>
+    {% endif %}
+
+    <!-- RISK DASHBOARD -->
     {% if risk_data %}
-    <div class="risk-meter">
+    <div class="risk-dashboard">
         <h2>📊 Risk Level: {{ risk_data.level }}</h2>
 
         <div class="progress-container">
@@ -41,71 +82,16 @@
 
         <p>{{ risk_data.percentage }}% Exposure</p>
     </div>
-    {% endif %}
 
-    <!-- USERNAME RESULTS -->
-    {% if username_data %}
-
-        <div class="summary-card">
-            <h2>📊 Exposure Summary</h2>
-
-            {% set verified_count = username_data.verified.values() | selectattr("found") | list | length %}
-            {% set manual_count = username_data.manual | length %}
-
-            <p>✅ Verified Accounts Found: <strong>{{ verified_count }}</strong></p>
-            <p>🔗 Manual Platforms: <strong>{{ manual_count }}</strong></p>
-        </div>
-
-        <div class="result-card">
-            <h2>✅ Verified Platforms</h2>
-
-            {% for platform, data in username_data.verified.items() %}
-                <div class="platform-row">
-                    <span>{{ platform }}</span>
-                    {% if data.found %}
-                        ✅ <a href="{{ data.url }}" target="_blank">Open</a>
-                    {% else %}
-                        ❌ Not Found
-                    {% endif %}
-                </div>
+    <!-- ADVICE SECTION -->
+    <div class="advice-card">
+        <h2>🛡 What Should You Do?</h2>
+        <ul>
+            {% for item in risk_data.advice %}
+                <li>{{ item }}</li>
             {% endfor %}
-        </div>
-
-        <div class="result-card">
-            <h2>🔗 Manual Check Required</h2>
-
-            {% for platform, data in username_data.manual.items() %}
-                <div class="platform-row">
-                    <span>{{ platform }}</span>
-                    <a href="{{ data.url }}" target="_blank" class="manual-link">
-                        🔍 Check
-                    </a>
-                </div>
-            {% endfor %}
-        </div>
-
-    {% endif %}
-
-    <!-- PHONE RESULTS -->
-    {% if phone_result %}
-        <div class="result-card">
-            <h2>📱 Phone Analysis</h2>
-            <p>Valid: {{ phone_result.valid }}</p>
-            <p>Country: {{ phone_result.country }}</p>
-            <p>Carrier: {{ phone_result.carrier }}</p>
-            <p>Line Type: {{ phone_result.line_type }}</p>
-        </div>
-    {% endif %}
-
-    <!-- EMAIL RESULTS -->
-    {% if email_result %}
-        <div class="result-card">
-            <h2>📧 Email Analysis</h2>
-            <p>Valid Format: {{ email_result.valid_format }}</p>
-            <p>Domain: {{ email_result.domain }}</p>
-            <p>MX Record Exists: {{ email_result.mx_record }}</p>
-            <p>Disposable: {{ email_result.disposable }}</p>
-        </div>
+        </ul>
+    </div>
     {% endif %}
 
     <!-- FEEDBACK SECTION -->
@@ -127,7 +113,6 @@
             </select>
 
             <input type="text" name="comment" placeholder="Optional comment">
-
             <button type="submit">Submit Rating</button>
         </form>
     </div>
