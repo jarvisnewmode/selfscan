@@ -8,6 +8,9 @@
     <meta name="keywords" content="username checker, email exposure, digital footprint scanner, online identity scan, public data audit">
     <meta name="author" content="SelfScan">
 
+    <!-- ✅ GOOGLE VERIFICATION -->
+    <meta name="google-site-verification" content="wlcOU0gNIbubUvxSzmeO6SVeiLMsM9md-kcfa-9bU1U" />
+
     <meta property="og:title" content="SelfScan – Digital Identity Exposure Tool">
     <meta property="og:description" content="Scan your public digital presence across multiple platforms.">
     <meta property="og:type" content="website">
@@ -27,7 +30,7 @@
 
     <p class="subtitle">Digital Identity & Exposure Audit Tool</p>
 
-    <!-- MONITORING SECTION -->
+    <!-- MONITORING -->
     <div class="monitoring-card">
         <h2>🛡 Monitoring (Beta)</h2>
 
@@ -54,7 +57,6 @@
         <button type="submit">Scan</button>
     </form>
 
-    <!-- SCAN META INFO -->
     {% if scan_time %}
     <div class="meta-card">
         <p>🕒 Scan Completed: {{ scan_time }}</p>
@@ -65,7 +67,6 @@
     </div>
     {% endif %}
 
-    <!-- RISK DASHBOARD -->
     {% if risk_data %}
     <div class="risk-dashboard">
         <h2>📊 Risk Level: {{ risk_data.level }}</h2>
@@ -83,7 +84,6 @@
         <p>{{ risk_data.percentage }}% Exposure</p>
     </div>
 
-    <!-- ADVICE SECTION -->
     <div class="advice-card">
         <h2>🛡 What Should You Do?</h2>
         <ul>
@@ -91,38 +91,6 @@
                 <li>{{ item }}</li>
             {% endfor %}
         </ul>
-    </div>
-    {% endif %}
-
-    <!-- FEEDBACK SECTION -->
-    <div class="feedback-card">
-        <h2>⭐ Rate SelfScan</h2>
-
-        {% if average_rating %}
-            <p>Average Rating: <strong>{{ average_rating }}/5</strong></p>
-        {% endif %}
-
-        <form method="POST" action="/feedback">
-            <select name="rating" required>
-                <option value="">Select rating</option>
-                <option value="5">⭐⭐⭐⭐⭐ (5)</option>
-                <option value="4">⭐⭐⭐⭐ (4)</option>
-                <option value="3">⭐⭐⭐ (3)</option>
-                <option value="2">⭐⭐ (2)</option>
-                <option value="1">⭐ (1)</option>
-            </select>
-
-            <input type="text" name="comment" placeholder="Optional comment">
-            <button type="submit">Submit Rating</button>
-        </form>
-    </div>
-
-    {% if feedback_list %}
-    <div class="feedback-card">
-        <h3>User Feedback</h3>
-        {% for item in feedback_list %}
-            <p>⭐ {{ item.rating }} - {{ item.comment }}</p>
-        {% endfor %}
     </div>
     {% endif %}
 
