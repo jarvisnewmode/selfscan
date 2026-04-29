@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, Response
 from scanners.username_scanner import scan_username
 from scanners.phone_scanner import analyze_phone
 from scanners.email_scanner import analyze_email
@@ -10,6 +10,15 @@ app = Flask(__name__)
 
 feedback_list = []
 monitoring_enabled = False
+
+
+# ✅ ROBOTS ROUTE (SEO uchun)
+@app.route("/robots.txt")
+def robots():
+    return Response(
+        "User-agent: *\nAllow: /",
+        mimetype="text/plain"
+    )
 
 
 @app.errorhandler(500)
@@ -35,7 +44,6 @@ def home():
     try:
         if request.method == "POST":
 
-            # Monitoring toggle
             if request.form.get("enable_monitoring"):
                 monitoring_enabled = True
                 return redirect(url_for("home"))
