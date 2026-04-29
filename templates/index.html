@@ -36,10 +36,6 @@
 
         {% if monitoring_enabled %}
             <p class="monitoring-active">✅ Monitoring Enabled (Free Beta)</p>
-            <p>
-                Monitoring is currently free during beta testing.
-                After official launch, subscription pricing may apply.
-            </p>
         {% else %}
             <form method="POST">
                 <button type="submit" name="enable_monitoring" value="1">
@@ -57,6 +53,7 @@
         <button type="submit">Scan</button>
     </form>
 
+    <!-- META INFO -->
     {% if scan_time %}
     <div class="meta-card">
         <p>🕒 Scan Completed: {{ scan_time }}</p>
@@ -67,6 +64,7 @@
     </div>
     {% endif %}
 
+    <!-- RISK -->
     {% if risk_data %}
     <div class="risk-dashboard">
         <h2>📊 Risk Level: {{ risk_data.level }}</h2>
@@ -94,7 +92,38 @@
     </div>
     {% endif %}
 
-</div>
+    <!-- FEEDBACK -->
+    <div class="feedback-card">
+        <h2>⭐ Rate SelfScan</h2>
 
+        {% if average_rating %}
+            <p>Average Rating: <strong>{{ average_rating }}/5</strong></p>
+        {% endif %}
+
+        <form method="POST" action="/feedback">
+            <select name="rating" required>
+                <option value="">Select rating</option>
+                <option value="5">⭐⭐⭐⭐⭐ (5)</option>
+                <option value="4">⭐⭐⭐⭐ (4)</option>
+                <option value="3">⭐⭐⭐ (3)</option>
+                <option value="2">⭐⭐ (2)</option>
+                <option value="1">⭐ (1)</option>
+            </select>
+
+            <input type="text" name="comment" placeholder="Optional comment">
+            <button type="submit">Submit Rating</button>
+        </form>
+    </div>
+
+    {% if feedback_list %}
+    <div class="feedback-card">
+        <h3>User Feedback</h3>
+        {% for item in feedback_list %}
+            <p>⭐ {{ item.rating }} - {{ item.comment }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+</div>
 </body>
 </html>
