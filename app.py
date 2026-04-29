@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, Response
+from flask import Flask, render_template, request, redirect, url_for
 from scanners.username_scanner import scan_username
 from scanners.phone_scanner import analyze_phone
 from scanners.email_scanner import analyze_email
@@ -6,19 +6,11 @@ from scanners.risk_engine import calculate_risk
 import datetime
 import time
 
-app = Flask(__name__)
+# ✅ Static root qo‘llab-quvvatlash
+app = Flask(__name__, static_url_path='')
 
 feedback_list = []
 monitoring_enabled = False
-
-
-# ✅ ROBOTS ROUTE (SEO uchun)
-@app.route("/robots.txt")
-def robots():
-    return Response(
-        "User-agent: *\nAllow: /",
-        mimetype="text/plain"
-    )
 
 
 @app.errorhandler(500)
